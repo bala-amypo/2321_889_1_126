@@ -17,7 +17,7 @@ public class TierUpgradeRule {
     public TierUpgradeRule() {
     }
 
-    // Parameterized constructor
+    
     public TierUpgradeRule(Long id, Long customerId, LocalDate visitDate, String channel) {
         this.id = id;
         this.customerId = customerId;

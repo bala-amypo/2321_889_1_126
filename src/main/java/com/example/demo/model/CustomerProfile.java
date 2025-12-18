@@ -1,4 +1,5 @@
 package com.example.demo.model;
+import jakarta.persisitence.*;
 import java.util.LocalDate;
 public class CustomerProfile{
     @id

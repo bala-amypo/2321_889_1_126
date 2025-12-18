@@ -4,14 +4,14 @@ import com.example.demo.model.CustomerProfile;
 import com.example.demo.repository.CustomerProfileRepository;
 import com.example.demo.service.CustomerProfileService;
 import org.springframework.stereotype.Service;
-
+import org.springframework.beans.factory.annotation.Autowired;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
 @Service
 public class CustomerProfileServiceImpl implements CustomerProfileService {
-
+    @Autowired
     private final CustomerProfileRepository customerProfileRepository;
 
     public CustomerProfileServiceImpl(CustomerProfileRepository customerProfileRepository) {

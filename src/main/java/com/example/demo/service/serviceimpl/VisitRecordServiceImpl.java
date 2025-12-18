@@ -4,14 +4,14 @@ import com.example.demo.model.VisitRecord;
 import com.example.demo.repository.VisitRecordRepository;
 import com.example.demo.service.VisitRecordService;
 import org.springframework.stereotype.Service;
-
+import org.springframework.beans.factory.annotation.Autowired;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
 @Service
 public class VisitRecordServiceImpl implements VisitRecordService {
-
+    @Autowired
     private final VisitRecordRepository visitRecordRepository;
 
     public VisitRecordServiceImpl(VisitRecordRepository visitRecordRepository) {

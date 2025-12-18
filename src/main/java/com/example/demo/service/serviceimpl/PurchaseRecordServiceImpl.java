@@ -4,14 +4,14 @@ import com.example.demo.model.PurchaseRecord;
 import com.example.demo.repository.PurchaseRecordRepository;
 import com.example.demo.service.PurchaseRecordService;
 import org.springframework.stereotype.Service;
-
+import org.springframework.beans.factory.annotation.Autowired;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
 @Service
 public class PurchaseRecordServiceImpl implements PurchaseRecordService {
-
+    @Autowired
     private final PurchaseRecordRepository purchaseRecordRepository;
 
     public PurchaseRecordServiceImpl(PurchaseRecordRepository purchaseRecordRepository) {

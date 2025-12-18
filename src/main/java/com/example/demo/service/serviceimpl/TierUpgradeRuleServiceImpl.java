@@ -4,14 +4,14 @@ import com.example.demo.model.TierUpgradeRule;
 import com.example.demo.repository.TierUpgradeRuleRepository;
 import com.example.demo.service.TierUpgradeRuleService;
 import org.springframework.stereotype.Service;
-
+import org.springframework.beans.factory.annotation.Autowired;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
 @Service
 public class TierUpgradeRuleServiceImpl implements TierUpgradeRuleService {
-
+    @Autowired
     private final TierUpgradeRuleRepository tierUpgradeRuleRepository;
 
     public TierUpgradeRuleServiceImpl(TierUpgradeRuleRepository tierUpgradeRuleRepository) {

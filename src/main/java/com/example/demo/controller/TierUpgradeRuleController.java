@@ -4,13 +4,13 @@ import com.example.demo.model.TierUpgradeRule;
 import com.example.demo.service.TierUpgradeRuleService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
+import org.springframework.beans.factory.annotation.Autowired;
 import java.util.List;
 
 @RestController
 @RequestMapping("/api/tier-upgrade-rules")
 public class TierUpgradeRuleController {
-
+    @Autowired
     private final TierUpgradeRuleService tierUpgradeRuleService;
 
     public TierUpgradeRuleController(TierUpgradeRuleService tierUpgradeRuleService) {

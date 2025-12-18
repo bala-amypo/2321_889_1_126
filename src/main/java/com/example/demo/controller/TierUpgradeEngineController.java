@@ -9,7 +9,7 @@ import java.util.Map;
 @RestController
 @RequestMapping("/api/tier-upgrade-engine")
 public class TierUpgradeEngineController {
-    
+    @Autowired
     private final TierUpgradeEngineService tierUpgradeEngineService;
 
     public TierUpgradeEngineController(

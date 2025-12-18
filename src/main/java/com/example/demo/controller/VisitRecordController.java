@@ -4,13 +4,13 @@ import com.example.demo.model.VisitRecord;
 import com.example.demo.service.VisitRecordService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
+import org.springframework.beans.factory.annotation.Autowired;
 import java.util.List;
 
 @RestController
 @RequestMapping("/api/visits")
 public class VisitRecordController {
-
+    @Autowired
     private final VisitRecordService visitRecordService;
 
     public VisitRecordController(VisitRecordService visitRecordService) {

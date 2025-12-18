@@ -5,7 +5,9 @@ public class TierUpgradeRule{
     private Long id;
     private String fromTier;
     private String toTier;
+    @PositiveOrZero
     private Double minSpend;
+    @PositiveOrZero
     private Integer minVisits;
     private Boolean active;
 }

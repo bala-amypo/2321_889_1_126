@@ -1,3 +1,4 @@
+package com.example.demo.model;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import java.time.LocalDate;
@@ -12,7 +13,7 @@ public class TierUpgradeRule {
     private LocalDate visitDate;
     private String channel;
 
-    // Empty (No-argument) constructor
+    
     public TierUpgradeRule() {
     }
 

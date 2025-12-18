@@ -3,10 +3,10 @@ import java.util.LocalDate;
 public class CustomerProfile{
     @id
     private Long id;
-    @column(name=unique)
+    @column(unique=true)
     private String customerId;
     private String fullName;
-    @column(name=unique)
+    @column(unique=true)
     private String email;
     private String phone;
     private String currentTier;

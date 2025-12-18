@@ -4,13 +4,13 @@ import com.example.demo.model.PurchaseRecord;
 import com.example.demo.service.PurchaseRecordService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
+import org.springframework.beans.factory.annotation.Autowired;
 import java.util.List;
 
 @RestController
 @RequestMapping("/api/purchases")
 public class PurchaseRecordController {
-
+    @Autowired
     private final PurchaseRecordService purchaseRecordService;
 
     public PurchaseRecordController(PurchaseRecordService purchaseRecordService) {

@@ -4,13 +4,13 @@ import com.example.demo.model.CustomerProfile;
 import com.example.demo.service.CustomerProfileService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
+import org.springframework.beans.factory.annotation.Autowired;
 import java.util.List;
 
 @RestController
 @RequestMapping("/api/customers")
 public class CustomerProfileController {
-
+    @Autowired
     private final CustomerProfileService customerProfileService;
 
     public CustomerProfileController(CustomerProfileService customerProfileService) {

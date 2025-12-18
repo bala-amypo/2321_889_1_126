@@ -1,3 +1,4 @@
+import com.example.demo.model;
 public class CustomerProfile{
     private Long id;
     private String customerId;

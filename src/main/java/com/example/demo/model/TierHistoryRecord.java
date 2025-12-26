@@ -1,80 +1,28 @@
-package com.example.demo.model;
+package com.example.demo.entity;
+
 import jakarta.persistence.*;
+import java.time.LocalDateTime;
 
 @Entity
+@Table(name = "tier_history_records")
 public class TierHistoryRecord {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String fromTier;
-    private String toTier;
-    private Double minSpend;
-    private Integer minVisits;
-    private Boolean active;
+    private Long customerId;
+    private String oldTier;
+    private String newTier;
+    private String reason;
+    private LocalDateTime changedAt;
 
-    // Empty (No-argument) constructor
-    public TierHistoryRecord() {
+    @PrePersist
+    public void prePersist() {
+        changedAt = LocalDateTime.now();
     }
 
-    // Parameterized constructor
-    public TierHistoryRecord(Long id, String fromTier, String toTier,
-                             Double minSpend, Integer minVisits, Boolean active) {
-        this.id = id;
-        this.fromTier = fromTier;
-        this.toTier = toTier;
-        this.minSpend = minSpend;
-        this.minVisits = minVisits;
-        this.active = active;
-    }
+    public TierHistoryRecord() {}
 
-    // Getters and Setters
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getFromTier() {
-        return fromTier;
-    }
-
-    public void setFromTier(String fromTier) {
-        this.fromTier = fromTier;
-    }
-
-    public String getToTier() {
-        return toTier;
-    }
-
-    public void setToTier(String toTier) {
-        this.toTier = toTier;
-    }
-
-    public Double getMinSpend() {
-        return minSpend;
-    }
-
-    public void setMinSpend(Double minSpend) {
-        this.minSpend = minSpend;
-    }
-
-    public Integer getMinVisits() {
-        return minVisits;
-    }
-
-    public void setMinVisits(Integer minVisits) {
-        this.minVisits = minVisits;
-    }
-
-    public Boolean getActive() {
-        return active;
-    }
-
-    public void setActive(Boolean active) {
-        this.active = active;
-    }
+    // getters and setters
 }

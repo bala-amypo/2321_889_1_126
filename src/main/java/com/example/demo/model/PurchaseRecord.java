@@ -1,22 +1,36 @@
-package com.example.demo.model;
+package com.example.demo.entity;
 
 import jakarta.persistence.*;
-import java.time.LocalDate;
 
 @Entity
-@Table(name = "purchase_records")
 public class PurchaseRecord {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private Long customerId;
+    private String customerId;
     private Double amount;
-    private LocalDate purchaseDate;
-    private String storeLocation;
+    private Integer visits;
 
     public PurchaseRecord() {}
 
-    // getters and setters
+    public PurchaseRecord(Long id, String customerId, Double amount, Integer visits) {
+        this.id = id;
+        this.customerId = customerId;
+        this.amount = amount;
+        this.visits = visits;
+    }
+
+    public Long getId() { return id; }
+    public void setId(Long id) { this.id = id; }
+
+    public String getCustomerId() { return customerId; }
+    public void setCustomerId(String customerId) { this.customerId = customerId; }
+
+    public Double getAmount() { return amount; }
+    public void setAmount(Double amount) { this.amount = amount; }
+
+    public Integer getVisits() { return visits; }
+    public void setVisits(Integer visits) { this.visits = visits; }
 }

@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/auth")
-public class AuthController {
+public class AuthController{
     private final CustomerProfileService customerService;
     private final JwtUtil jwtUtil;
     private final PasswordEncoder passwordEncoder;
@@ -33,7 +33,7 @@ public class AuthController {
     @PostMapping("/login")
     public ResponseEntity<ApiResponse<String>> login(@RequestBody LoginRequest request){
         CustomerProfile customer=customerService.findByCustomerId(request.getEmail()).orElseThrow(()->new IllegalArgumentException("Invalid credentials"));
-        String token=jwtUtil.generateToken(customer.getId(),customer.getEmail(),"USER");
+        String token=jwtUtil.generateToken(customer.getEmail());
         return ResponseEntity.ok(new ApiResponse<>(true,"Login successful",token));
     }
 }

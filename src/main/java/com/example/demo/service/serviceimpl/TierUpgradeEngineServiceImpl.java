@@ -1,39 +1,75 @@
-package com.example.demo.service.serviceimpl;
+package com.example.demo.service.impl;
 
-import com.example.demo.model.TierHistoryRecord;
-import com.example.demo.repository.TierHistoryRecordRepository;
+import com.example.demo.entity.*;
+import com.example.demo.repository.*;
 import com.example.demo.service.TierUpgradeEngineService;
-import org.springframework.stereotype.Service;
-import org.springframework.beans.factory.annotation.Autowired;
-import java.util.List;
-import java.util.Optional;
 
-@Service
+import java.util.List;
+import java.util.NoSuchElementException;
+
 public class TierUpgradeEngineServiceImpl implements TierUpgradeEngineService {
-    @Autowired
-    private final TierHistoryRecordRepository tierHistoryRecordRepository;
+
+    private final CustomerProfileRepository customerRepo;
+    private final PurchaseRecordRepository purchaseRepo;
+    private final VisitRecordRepository visitRepo;
+    private final TierUpgradeRuleRepository ruleRepo;
+    private final TierHistoryRecordRepository historyRepo;
 
     public TierUpgradeEngineServiceImpl(
-            TierHistoryRecordRepository tierHistoryRecordRepository) {
-        this.tierHistoryRecordRepository = tierHistoryRecordRepository;
+            CustomerProfileRepository customerRepo,
+            PurchaseRecordRepository purchaseRepo,
+            VisitRecordRepository visitRepo,
+            TierUpgradeRuleRepository ruleRepo,
+            TierHistoryRecordRepository historyRepo) {
+
+        this.customerRepo = customerRepo;
+        this.purchaseRepo = purchaseRepo;
+        this.visitRepo = visitRepo;
+        this.ruleRepo = ruleRepo;
+        this.historyRepo = historyRepo;
     }
 
     @Override
-    public Optional<String> evaluateTierUpgrade(
-            String currentTier,
-            Double totalSpend,
-            Integer totalVisits) {
+    public TierHistoryRecord evaluateAndUpgradeTier(Long customerId) {
 
-        List<TierHistoryRecord> rules = tierHistoryRecordRepository.findAll();
+        CustomerProfile customer = customerRepo.findById(customerId)
+                .orElseThrow(() -> new NoSuchElementException("Customer not found"));
 
-        return rules.stream()
-                .filter(TierHistoryRecord::getActive)
-                .filter(rule -> rule.getFromTier().equalsIgnoreCase(currentTier))
-                .filter(rule ->
-                        totalSpend >= rule.getMinSpend()
-                                && totalVisits >= rule.getMinVisits()
-                )
-                .map(TierHistoryRecord::getToTier)
-                .findFirst();
+        double totalSpend = purchaseRepo.findByCustomerId(customerId)
+                .stream().mapToDouble(PurchaseRecord::getAmount).sum();
+
+        int totalVisits = visitRepo.findByCustomerId(customerId).size();
+
+        List<TierUpgradeRule> rules = ruleRepo.findByActiveTrue();
+
+        for (TierUpgradeRule rule : rules) {
+            if (rule.getFromTier().equals(customer.getCurrentTier())
+                    && totalSpend >= rule.getMinSpend()
+                    && totalVisits >= rule.getMinVisits()) {
+
+                String oldTier = customer.getCurrentTier();
+                customer.setCurrentTier(rule.getToTier());
+                customerRepo.save(customer);
+
+                TierHistoryRecord history = new TierHistoryRecord();
+                history.setCustomerId(customerId);
+                history.setOldTier(oldTier);
+                history.setNewTier(rule.getToTier());
+                history.setReason("Auto tier upgrade");
+
+                return historyRepo.save(history);
+            }
+        }
+        return null;
+    }
+
+    @Override
+    public List<TierHistoryRecord> getHistoryByCustomer(Long customerId) {
+        return historyRepo.findByCustomerId(customerId);
+    }
+
+    @Override
+    public List<TierHistoryRecord> getAllHistory() {
+        return historyRepo.findAll();
     }
 }

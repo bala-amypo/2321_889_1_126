@@ -1,12 +1,14 @@
 package com.example.demo.service;
 
-import java.util.Optional;
+import com.example.demo.entity.TierHistoryRecord;
+import java.util.List;
 
 public interface TierUpgradeEngineService {
 
-    Optional<String> evaluateTierUpgrade(
-            String currentTier,
-            Double totalSpend,
-            Integer totalVisits
-    );
+    TierHistoryRecord evaluateAndUpgradeTier(Long customerId);
+
+    List<TierHistoryRecord> getHistoryByCustomer(Long customerId);
+
+    List<TierHistoryRecord> getAllHistory();
 }
+

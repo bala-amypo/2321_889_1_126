@@ -1,55 +1,45 @@
-package com.example.demo.service.serviceimpl;
+package com.example.demo.service.impl;
 
-import com.example.demo.model.VisitRecord;
+import com.example.demo.entity.VisitRecord;
 import com.example.demo.repository.VisitRecordRepository;
 import com.example.demo.service.VisitRecordService;
-import org.springframework.stereotype.Service;
-import org.springframework.beans.factory.annotation.Autowired;
-import java.time.LocalDate;
+
 import java.util.List;
-import java.util.Optional;
+import java.util.NoSuchElementException;
+import java.util.Set;
 
-@Service
 public class VisitRecordServiceImpl implements VisitRecordService {
-    @Autowired
-    private final VisitRecordRepository visitRecordRepository;
 
-    public VisitRecordServiceImpl(VisitRecordRepository visitRecordRepository) {
-        this.visitRecordRepository = visitRecordRepository;
+    private final VisitRecordRepository repository;
+
+    private static final Set<String> VALID_CHANNELS =
+            Set.of("STORE", "APP", "WEB");
+
+    public VisitRecordServiceImpl(VisitRecordRepository repository) {
+        this.repository = repository;
     }
 
     @Override
-    public VisitRecord createVisit(VisitRecord visitRecord) {
-        if (visitRecord.getVisitDate() == null) {
-            visitRecord.setVisitDate(LocalDate.now());
+    public VisitRecord recordVisit(VisitRecord visit) {
+        if (!VALID_CHANNELS.contains(visit.getChannel())) {
+            throw new IllegalArgumentException("Invalid channel");
         }
-        return visitRecordRepository.save(visitRecord);
+        return repository.save(visit);
     }
 
     @Override
-    public VisitRecord updateVisit(Long id, VisitRecord visitRecord) {
-        VisitRecord existing = visitRecordRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("VisitRecord not found with id: " + id));
-
-        existing.setCustomerId(visitRecord.getCustomerId());
-        existing.setVisitDate(visitRecord.getVisitDate());
-        existing.setChannel(visitRecord.getChannel());
-
-        return visitRecordRepository.save(existing);
-    }
-
-    @Override
-    public Optional<VisitRecord> getVisitById(Long id) {
-        return visitRecordRepository.findById(id);
+    public List<VisitRecord> getVisitsByCustomer(Long customerId) {
+        return repository.findByCustomerId(customerId);
     }
 
     @Override
     public List<VisitRecord> getAllVisits() {
-        return visitRecordRepository.findAll();
+        return repository.findAll();
     }
 
     @Override
-    public void deleteVisit(Long id) {
-        visitRecordRepository.deleteById(id);
+    public VisitRecord getVisitById(Long id) {
+        return repository.findById(id)
+                .orElseThrow(() -> new NoSuchElementException("Visit record not found"));
     }
 }

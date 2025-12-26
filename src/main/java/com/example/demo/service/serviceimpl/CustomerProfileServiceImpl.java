@@ -1,59 +1,49 @@
 package com.example.demo.service.serviceimpl;
 
-import com.example.demo.model.CustomerProfile;
+import com.example.demo.entity.CustomerProfile;
 import com.example.demo.repository.CustomerProfileRepository;
 import com.example.demo.service.CustomerProfileService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.NoSuchElementException;
+import java.util.Optional;
 
+@Service
 public class CustomerProfileServiceImpl implements CustomerProfileService {
 
-    private final CustomerProfileRepository repository;
+    @Autowired
+    private CustomerProfileRepository customerProfileRepository;
 
-    public CustomerProfileServiceImpl(CustomerProfileRepository repository) {
-        this.repository = repository;
+    @Override
+    public CustomerProfile createCustomerProfile(CustomerProfile customer) {
+        customer.setActive(true);
+        return customerProfileRepository.save(customer);
     }
 
     @Override
-    public CustomerProfile createCustomer(CustomerProfile customer) {
-        if (repository.findByCustomerId(customer.getCustomerId()).isPresent()) {
-            throw new IllegalArgumentException("Customer ID already exists");
+    public List<CustomerProfile> getAllCustomerProfiles() {
+        return customerProfileRepository.findAll();
+    }
+
+    @Override
+    public CustomerProfile updateCustomerTier(String customerId, String newTier) {
+        Optional<CustomerProfile> optional = customerProfileRepository.findByCustomerId(customerId);
+        if (optional.isPresent()) {
+            CustomerProfile customer = optional.get();
+            customer.setCurrentTier(newTier);
+            return customerProfileRepository.save(customer);
         }
-        if (customer.getCurrentTier() == null) {
-            customer.setCurrentTier("BRONZE");
+        return null;
+    }
+
+    @Override
+    public void deactivateCustomer(String customerId) {
+        Optional<CustomerProfile> optional = customerProfileRepository.findByCustomerId(customerId);
+        if (optional.isPresent()) {
+            CustomerProfile customer = optional.get();
+            customer.setActive(false);
+            customerProfileRepository.save(customer);
         }
-        return repository.save(customer);
-    }
-
-    @Override
-    public CustomerProfile getCustomerById(Long id) {
-        return repository.findById(id)
-                .orElseThrow(() -> new NoSuchElementException("Customer not found"));
-    }
-
-    @Override
-    public CustomerProfile findByCustomerId(String customerId) {
-        return repository.findByCustomerId(customerId)
-                .orElseThrow(() -> new NoSuchElementException("Customer not found"));
-    }
-
-    @Override
-    public List<CustomerProfile> getAllCustomers() {
-        return repository.findAll();
-    }
-
-    @Override
-    public CustomerProfile updateTier(Long id, String newTier) {
-        CustomerProfile customer = getCustomerById(id);
-        customer.setCurrentTier(newTier);
-        return repository.save(customer);
-    }
-
-    @Override
-    public CustomerProfile updateStatus(Long id, boolean active) {
-        CustomerProfile customer = getCustomerById(id);
-        customer.setActive(active);
-        return repository.save(customer);
     }
 }

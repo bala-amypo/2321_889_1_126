@@ -2,7 +2,6 @@ package com.example.demo.security;
 
 import com.example.demo.model.CustomerProfile;
 import com.example.demo.repository.CustomerProfileRepository;
-
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -17,13 +16,12 @@ public class CustomerUserDetailsService implements UserDetailsService {
 
     private final CustomerProfileRepository repository;
 
-    public CustomUserDetailsService(CustomerProfileRepository repository) {
+    public CustomerUserDetailsService(CustomerProfileRepository repository) {
         this.repository = repository;
     }
 
     @Override
-    public UserDetails loadUserByUsername(String email)
-            throws UsernameNotFoundException {
+    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
 
         CustomerProfile customer = repository.findByEmail(email)
                 .orElseThrow(() ->

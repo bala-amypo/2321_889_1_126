@@ -1,6 +1,6 @@
-package com.example.demo.service.impl;
+package com.example.demo.service.serviceimpl;
 
-import com.example.demo.entity.VisitRecord;
+import com.example.demo.model.VisitRecord;
 import com.example.demo.repository.VisitRecordRepository;
 import com.example.demo.service.VisitRecordService;
 

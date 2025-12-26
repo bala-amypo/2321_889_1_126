@@ -1,34 +1,33 @@
 package com.example.demo.security;
 
-import com.example.demo.model.CustomerProfile;
-import com.example.demo.repository.CustomerProfileRepository;
-
-import org.springframework.security.core.userdetails.*;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import com.example.demo.entity.UserAccount;
+import com.example.demo.repository.UserAccountRepository;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-
 @Service
-public class CustomUserDetailsService implements UserDetailsService {
+public class CustomerUserDetailsService implements UserDetailsService {
 
-    private final CustomerProfileRepository repository;
+    private final UserAccountRepository userAccountRepository;
 
-    public CustomUserDetailsService(CustomerProfileRepository repository) {
-        this.repository = repository;
-    }
+    public CustomerUserDetailsService(UserAccountRepository userAccountRepository) {
+        this.userAccountRepository = userAccountRepository;
+    }
 
-    @Override
-    public UserDetails loadUserByUsername(String email)
-            throws UsernameNotFoundException {
+    @Override
+    public UserDetails loadUserByUsername(String username)
+            throws UsernameNotFoundException {
 
-        CustomerProfile customer = repository.findByEmail(email)
-                .orElseThrow(() ->
-                        new UsernameNotFoundException("User not found"));
+        UserAccount user = userAccountRepository.findByUsername(username)
+                .orElseThrow(() ->
+                        new UsernameNotFoundException("User not found: " + username));
 
-        return User.withUsername(customer.getEmail())
-                .password("N/A") 
-                .authorities(List.of(new SimpleGrantedAuthority("ROLE_USER")))
-                .build();
-    }
+        return org.springframework.security.core.userdetails.User
+                .withUsername(user.getUsername())
+                .password(user.getPassword())
+                .roles(user.getRole())
+                .build();
+    }
 }

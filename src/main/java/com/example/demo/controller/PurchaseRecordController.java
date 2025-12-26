@@ -1,6 +1,6 @@
 package com.example.demo.controller;
 
-import com.example.demo.entity.PurchaseRecord;
+import com.example.demo.model.PurchaseRecord;
 import com.example.demo.service.PurchaseRecordService;
 import org.springframework.web.bind.annotation.*;
 

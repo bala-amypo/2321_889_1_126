@@ -1,8 +1,8 @@
 package com.example.demo.controller;
 
-import com.example.demo.entity.CustomerProfile;
-import com.example.demo.entity.PurchaseRecord;
-import com.example.demo.entity.TierUpgradeRule;
+import com.example.demo.model.CustomerProfile;
+import com.example.demo.model.PurchaseRecord;
+import com.example.demo.model.TierUpgradeRule;
 import com.example.demo.service.TierUpgradeEngineService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;

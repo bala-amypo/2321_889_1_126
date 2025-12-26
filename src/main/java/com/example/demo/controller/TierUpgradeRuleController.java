@@ -1,59 +1,47 @@
 package com.example.demo.controller;
 
-import com.example.demo.model.TierUpgradeRule;
+import com.example.demo.entity.TierUpgradeRule;
 import com.example.demo.service.TierUpgradeRuleService;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.beans.factory.annotation.Autowired;
+
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/tier-upgrade-rules")
+@RequestMapping("/tier-rules")
 public class TierUpgradeRuleController {
-    @Autowired
-    private final TierUpgradeRuleService tierUpgradeRuleService;
 
-    public TierUpgradeRuleController(TierUpgradeRuleService tierUpgradeRuleService) {
-        this.tierUpgradeRuleService = tierUpgradeRuleService;
+    private final TierUpgradeRuleService service;
+
+    public TierUpgradeRuleController(TierUpgradeRuleService service) {
+        this.service = service;
     }
 
-    // CREATE
     @PostMapping
-    public ResponseEntity<TierUpgradeRule> createTierUpgradeRule(
-            @RequestBody TierUpgradeRule tierUpgradeRule) {
-        return ResponseEntity.ok(
-                tierUpgradeRuleService.createTierUpgradeRule(tierUpgradeRule)
-        );
+    public TierUpgradeRule createRule(@RequestBody TierUpgradeRule rule) {
+        return service.createRule(rule);
     }
 
-    // GET BY ID
-    @GetMapping("/{id}")
-    public ResponseEntity<TierUpgradeRule> getTierUpgradeRuleById(@PathVariable Long id) {
-        return tierUpgradeRuleService.getTierUpgradeRuleById(id)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
-    }
-
-    // GET ALL
-    @GetMapping
-    public ResponseEntity<List<TierUpgradeRule>> getAllTierUpgradeRules() {
-        return ResponseEntity.ok(tierUpgradeRuleService.getAllTierUpgradeRules());
-    }
-
-    // UPDATE
     @PutMapping("/{id}")
-    public ResponseEntity<TierUpgradeRule> updateTierUpgradeRule(
+    public TierUpgradeRule updateRule(
             @PathVariable Long id,
-            @RequestBody TierUpgradeRule tierUpgradeRule) {
-        return ResponseEntity.ok(
-                tierUpgradeRuleService.updateTierUpgradeRule(id, tierUpgradeRule)
-        );
+            @RequestBody TierUpgradeRule rule) {
+        return service.updateRule(id, rule);
     }
 
-    // DELETE
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteTierUpgradeRule(@PathVariable Long id) {
-        tierUpgradeRuleService.deleteTierUpgradeRule(id);
-        return ResponseEntity.noContent().build();
+    @GetMapping("/active")
+    public List<TierUpgradeRule> getActiveRules() {
+        return service.getActiveRules();
+    }
+
+    @GetMapping
+    public List<TierUpgradeRule> getAllRules() {
+        return service.getAllRules();
+    }
+
+    @GetMapping("/from/{fromTier}/to/{toTier}")
+    public TierUpgradeRule getRule(
+            @PathVariable String fromTier,
+            @PathVariable String toTier) {
+        return service.getRule(fromTier, toTier);
     }
 }

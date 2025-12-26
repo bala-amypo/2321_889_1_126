@@ -1,59 +1,52 @@
 package com.example.demo.controller;
 
-import com.example.demo.model.CustomerProfile;
+import com.example.demo.entity.CustomerProfile;
 import com.example.demo.service.CustomerProfileService;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.beans.factory.annotation.Autowired;
+
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/customers")
+@RequestMapping("/customers")
 public class CustomerProfileController {
-    @Autowired
-    private final CustomerProfileService customerProfileService;
 
-    public CustomerProfileController(CustomerProfileService customerProfileService) {
-        this.customerProfileService = customerProfileService;
+    private final CustomerProfileService service;
+
+    public CustomerProfileController(CustomerProfileService service) {
+        this.service = service;
     }
 
     @PostMapping
-    public ResponseEntity<CustomerProfile> createCustomer(@RequestBody CustomerProfile customerProfile) {
-        return ResponseEntity.ok(customerProfileService.createCustomerProfile(customerProfile));
+    public CustomerProfile createCustomer(@RequestBody CustomerProfile customer) {
+        return service.createCustomer(customer);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<CustomerProfile> getCustomerById(@PathVariable Long id) {
-        return customerProfileService.getCustomerProfileById(id)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+    public CustomerProfile getCustomerById(@PathVariable Long id) {
+        return service.getCustomerById(id);
     }
-
 
     @GetMapping("/by-customer-id/{customerId}")
-    public ResponseEntity<CustomerProfile> getByCustomerId(@PathVariable String customerId) {
-        return customerProfileService.getCustomerProfileByCustomerId(customerId)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+    public CustomerProfile getByCustomerId(@PathVariable String customerId) {
+        return service.findByCustomerId(customerId);
     }
-
 
     @GetMapping
-    public ResponseEntity<List<CustomerProfile>> getAllCustomers() {
-        return ResponseEntity.ok(customerProfileService.getAllCustomerProfiles());
+    public List<CustomerProfile> getAllCustomers() {
+        return service.getAllCustomers();
     }
 
-
-    @PutMapping("/{id}")
-    public ResponseEntity<CustomerProfile> updateCustomer(
+    @PutMapping("/{id}/tier")
+    public CustomerProfile updateTier(
             @PathVariable Long id,
-            @RequestBody CustomerProfile customerProfile) {
-        return ResponseEntity.ok(customerProfileService.updateCustomerProfile(id, customerProfile));
+            @RequestParam String tier) {
+        return service.updateTier(id, tier);
     }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteCustomer(@PathVariable Long id) {
-        customerProfileService.deleteCustomerProfile(id);
-        return ResponseEntity.noContent().build();
+    @PutMapping("/{id}/status")
+    public CustomerProfile updateStatus(
+            @PathVariable Long id,
+            @RequestParam boolean active) {
+        return service.updateStatus(id, active);
     }
 }

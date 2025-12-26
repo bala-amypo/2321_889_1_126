@@ -1,56 +1,38 @@
 package com.example.demo.controller;
 
-import com.example.demo.model.VisitRecord;
+import com.example.demo.entity.VisitRecord;
 import com.example.demo.service.VisitRecordService;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.beans.factory.annotation.Autowired;
+
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/visits")
+@RequestMapping("/visits")
 public class VisitRecordController {
-    @Autowired
-    private final VisitRecordService visitRecordService;
 
-    public VisitRecordController(VisitRecordService visitRecordService) {
-        this.visitRecordService = visitRecordService;
+    private final VisitRecordService service;
+
+    public VisitRecordController(VisitRecordService service) {
+        this.service = service;
     }
 
-    // CREATE
     @PostMapping
-    public ResponseEntity<VisitRecord> createVisit(@RequestBody VisitRecord visitRecord) {
-        return ResponseEntity.ok(visitRecordService.createVisit(visitRecord));
+    public VisitRecord recordVisit(@RequestBody VisitRecord visit) {
+        return service.recordVisit(visit);
     }
 
-    // GET BY ID
     @GetMapping("/{id}")
-    public ResponseEntity<VisitRecord> getVisitById(@PathVariable Long id) {
-        return visitRecordService.getVisitById(id)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+    public VisitRecord getVisitById(@PathVariable Long id) {
+        return service.getVisitById(id);
     }
 
-    // GET ALL
+    @GetMapping("/customer/{customerId}")
+    public List<VisitRecord> getByCustomer(@PathVariable Long customerId) {
+        return service.getVisitsByCustomer(customerId);
+    }
+
     @GetMapping
-    public ResponseEntity<List<VisitRecord>> getAllVisits() {
-        return ResponseEntity.ok(visitRecordService.getAllVisits());
-    }
-
-    // UPDATE
-    @PutMapping("/{id}")
-    public ResponseEntity<VisitRecord> updateVisit(
-            @PathVariable Long id,
-            @RequestBody VisitRecord visitRecord) {
-        return ResponseEntity.ok(
-                visitRecordService.updateVisit(id, visitRecord)
-        );
-    }
-
-    // DELETE
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteVisit(@PathVariable Long id) {
-        visitRecordService.deleteVisit(id);
-        return ResponseEntity.noContent().build();
+    public List<VisitRecord> getAllVisits() {
+        return service.getAllVisits();
     }
 }

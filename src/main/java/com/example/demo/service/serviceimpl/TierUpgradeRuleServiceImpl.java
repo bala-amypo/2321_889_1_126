@@ -1,55 +1,31 @@
 package com.example.demo.service.serviceimpl;
 
-import com.example.demo.model.TierUpgradeRule;
+import com.example.demo.entity.TierUpgradeRule;
 import com.example.demo.repository.TierUpgradeRuleRepository;
 import com.example.demo.service.TierUpgradeRuleService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.NoSuchElementException;
 
+@Service
 public class TierUpgradeRuleServiceImpl implements TierUpgradeRuleService {
 
-    private final TierUpgradeRuleRepository repository;
-
-    public TierUpgradeRuleServiceImpl(TierUpgradeRuleRepository repository) {
-        this.repository = repository;
-    }
+    @Autowired
+    private TierUpgradeRuleRepository tierUpgradeRuleRepository;
 
     @Override
     public TierUpgradeRule createRule(TierUpgradeRule rule) {
-        if (rule.getMinSpend() < 0 || rule.getMinVisits() < 0) {
-            throw new IllegalArgumentException("Invalid rule values");
-        }
-        return repository.save(rule);
-    }
-
-    @Override
-    public TierUpgradeRule updateRule(Long id, TierUpgradeRule updatedRule) {
-        TierUpgradeRule rule = repository.findById(id)
-                .orElseThrow(() -> new NoSuchElementException("Rule not found"));
-
-        rule.setFromTier(updatedRule.getFromTier());
-        rule.setToTier(updatedRule.getToTier());
-        rule.setMinSpend(updatedRule.getMinSpend());
-        rule.setMinVisits(updatedRule.getMinVisits());
-        rule.setActive(updatedRule.getActive());
-
-        return repository.save(rule);
-    }
-
-    @Override
-    public List<TierUpgradeRule> getActiveRules() {
-        return repository.findByActiveTrue();
-    }
-
-    @Override
-    public TierUpgradeRule getRule(String fromTier, String toTier) {
-        return repository.findByFromTierAndToTier(fromTier, toTier)
-                .orElseThrow(() -> new NoSuchElementException("Rule not found"));
+        return tierUpgradeRuleRepository.save(rule);
     }
 
     @Override
     public List<TierUpgradeRule> getAllRules() {
-        return repository.findAll();
+        return tierUpgradeRuleRepository.findAll();
+    }
+
+    @Override
+    public TierUpgradeRule updateRule(TierUpgradeRule updatedRule) {
+        return tierUpgradeRuleRepository.save(updatedRule);
     }
 }

@@ -1,36 +1,41 @@
 package com.example.demo.model;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Table;
+import jakarta.persistence.Id;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Column;
+
+import java.time.LocalDate;
 
 @Entity
+@Table(name = "visit_record")
 public class VisitRecord {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String customerId;
+    @Column(name = "customer_id")
+    private Long customerId;
+
+    private LocalDate visitDate;
     private String channel;
-    private Integer visits;
 
     public VisitRecord() {}
 
-    public VisitRecord(Long id, String customerId, String channel, Integer visits) {
-        this.id = id;
-        this.customerId = customerId;
-        this.channel = channel;
-        this.visits = visits;
+    public void setId(Long id) { this.id = id; }
+    public void setVisitDate(LocalDate visitDate) { this.visitDate = visitDate; }
+    public void setChannel(String channel) { this.channel = channel; }
+
+    public void setCustomer(CustomerProfile customer) {
+        this.customerId = customer.getId();
     }
 
     public Long getId() { return id; }
-    public void setId(Long id) { this.id = id; }
-
-    public String getCustomerId() { return customerId; }
-    public void setCustomerId(String customerId) { this.customerId = customerId; }
-
+    public Long getCustomerId() { return customerId; }
+    public LocalDate getVisitDate() { return visitDate; }
     public String getChannel() { return channel; }
-    public void setChannel(String channel) { this.channel = channel; }
-
-    public Integer getVisits() { return visits; }
-    public void setVisits(Integer visits) { this.visits = visits; }
 }
+

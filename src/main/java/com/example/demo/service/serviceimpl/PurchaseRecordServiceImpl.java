@@ -1,61 +1,41 @@
-package com.example.demo.service.serviceimpl;
+package com.example.demo.service.impl;
 
-import com.example.demo.model.PurchaseRecord;
+import com.example.demo.entity.PurchaseRecord;
 import com.example.demo.repository.PurchaseRecordRepository;
 import com.example.demo.service.PurchaseRecordService;
-import org.springframework.stereotype.Service;
-import org.springframework.beans.factory.annotation.Autowired;
-import java.time.LocalDate;
+
 import java.util.List;
-import java.util.Optional;
+import java.util.NoSuchElementException;
 
-@Service
 public class PurchaseRecordServiceImpl implements PurchaseRecordService {
-    @Autowired
-    private final PurchaseRecordRepository purchaseRecordRepository;
 
-    public PurchaseRecordServiceImpl(PurchaseRecordRepository purchaseRecordRepository) {
-        this.purchaseRecordRepository = purchaseRecordRepository;
+    private final PurchaseRecordRepository repository;
+
+    public PurchaseRecordServiceImpl(PurchaseRecordRepository repository) {
+        this.repository = repository;
     }
 
     @Override
-    public PurchaseRecord createPurchase(PurchaseRecord purchaseRecord) {
-        if (purchaseRecord.getPurchaseDate() == null) {
-            purchaseRecord.setPurchaseDate(LocalDate.now());
+    public PurchaseRecord recordPurchase(PurchaseRecord purchase) {
+        if (purchase.getAmount() <= 0) {
+            throw new IllegalArgumentException("Amount must be positive");
         }
-        return purchaseRecordRepository.save(purchaseRecord);
+        return repository.save(purchase);
     }
 
     @Override
-    public PurchaseRecord updatePurchase(Long id, PurchaseRecord purchaseRecord) {
-        PurchaseRecord existing = purchaseRecordRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("PurchaseRecord not found with id: " + id));
-
-        existing.setCustomerId(purchaseRecord.getCustomerId());
-        existing.setAmount(purchaseRecord.getAmount());
-        existing.setPurchaseDate(purchaseRecord.getPurchaseDate());
-        existing.setStoreLocation(purchaseRecord.getStoreLocation());
-
-        return purchaseRecordRepository.save(existing);
-    }
-
-    @Override
-    public Optional<PurchaseRecord> getPurchaseById(Long id) {
-        return purchaseRecordRepository.findById(id);
-    }
-
-    @Override
-    public Optional<PurchaseRecord> getPurchaseByCustomerId(String customerId) {
-        return purchaseRecordRepository.findByCustomerId(customerId);
+    public List<PurchaseRecord> getPurchasesByCustomer(Long customerId) {
+        return repository.findByCustomerId(customerId);
     }
 
     @Override
     public List<PurchaseRecord> getAllPurchases() {
-        return purchaseRecordRepository.findAll();
+        return repository.findAll();
     }
 
     @Override
-    public void deletePurchase(Long id) {
-        purchaseRecordRepository.deleteById(id);
+    public PurchaseRecord getPurchaseById(Long id) {
+        return repository.findById(id)
+                .orElseThrow(() -> new NoSuchElementException("Purchase record not found"));
     }
 }

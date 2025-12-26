@@ -1,60 +1,59 @@
-package com.example.demo.service.serviceimpl;
+package com.example.demo.service.impl;
 
-import com.example.demo.model.CustomerProfile;
+import com.example.demo.entity.CustomerProfile;
 import com.example.demo.repository.CustomerProfileRepository;
 import com.example.demo.service.CustomerProfileService;
-import org.springframework.stereotype.Service;
-import org.springframework.beans.factory.annotation.Autowired;
-import java.time.LocalDateTime;
+
 import java.util.List;
-import java.util.Optional;
+import java.util.NoSuchElementException;
 
-@Service
 public class CustomerProfileServiceImpl implements CustomerProfileService {
-    @Autowired
-    private final CustomerProfileRepository customerProfileRepository;
 
-    public CustomerProfileServiceImpl(CustomerProfileRepository customerProfileRepository) {
-        this.customerProfileRepository = customerProfileRepository;
+    private final CustomerProfileRepository repository;
+
+    public CustomerProfileServiceImpl(CustomerProfileRepository repository) {
+        this.repository = repository;
     }
 
     @Override
-    public CustomerProfile createCustomerProfile(CustomerProfile customerProfile) {
-        customerProfile.setCreatedAt(LocalDateTime.now());
-        return customerProfileRepository.save(customerProfile);
+    public CustomerProfile createCustomer(CustomerProfile customer) {
+        if (repository.findByCustomerId(customer.getCustomerId()).isPresent()) {
+            throw new IllegalArgumentException("Customer ID already exists");
+        }
+        if (customer.getCurrentTier() == null) {
+            customer.setCurrentTier("BRONZE");
+        }
+        return repository.save(customer);
     }
 
     @Override
-    public CustomerProfile updateCustomerProfile(Long id, CustomerProfile customerProfile) {
-        CustomerProfile existing = customerProfileRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("CustomerProfile not found with id: " + id));
-
-        existing.setFullName(customerProfile.getFullName());
-        existing.setEmail(customerProfile.getEmail());
-        existing.setPhone(customerProfile.getPhone());
-        existing.setCurrentTier(customerProfile.getCurrentTier());
-        existing.setActive(customerProfile.getActive());
-
-        return customerProfileRepository.save(existing);
+    public CustomerProfile getCustomerById(Long id) {
+        return repository.findById(id)
+                .orElseThrow(() -> new NoSuchElementException("Customer not found"));
     }
 
     @Override
-    public Optional<CustomerProfile> getCustomerProfileById(Long id) {
-        return customerProfileRepository.findById(id);
+    public CustomerProfile findByCustomerId(String customerId) {
+        return repository.findByCustomerId(customerId)
+                .orElseThrow(() -> new NoSuchElementException("Customer not found"));
     }
 
     @Override
-    public Optional<CustomerProfile> getCustomerProfileByCustomerId(String customerId) {
-        return customerProfileRepository.findByCustomerId(customerId);
+    public List<CustomerProfile> getAllCustomers() {
+        return repository.findAll();
     }
 
     @Override
-    public List<CustomerProfile> getAllCustomerProfiles() {
-        return customerProfileRepository.findAll();
+    public CustomerProfile updateTier(Long id, String newTier) {
+        CustomerProfile customer = getCustomerById(id);
+        customer.setCurrentTier(newTier);
+        return repository.save(customer);
     }
 
     @Override
-    public void deleteCustomerProfile(Long id) {
-        customerProfileRepository.deleteById(id);
+    public CustomerProfile updateStatus(Long id, boolean active) {
+        CustomerProfile customer = getCustomerById(id);
+        customer.setActive(active);
+        return repository.save(customer);
     }
 }

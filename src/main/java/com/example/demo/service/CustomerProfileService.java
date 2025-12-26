@@ -1,20 +1,20 @@
 package com.example.demo.service;
 
-import com.example.demo.model.CustomerProfile;
+import com.example.demo.entity.CustomerProfile;
 import java.util.List;
-import java.util.Optional;
 
 public interface CustomerProfileService {
 
-    CustomerProfile createCustomerProfile(CustomerProfile customerProfile);
+    CustomerProfile createCustomer(CustomerProfile customer);
 
-    CustomerProfile updateCustomerProfile(Long id, CustomerProfile customerProfile);
+    CustomerProfile getCustomerById(Long id);
 
-    Optional<CustomerProfile> getCustomerProfileById(Long id);
+    CustomerProfile findByCustomerId(String customerId);
 
-    Optional<CustomerProfile> getCustomerProfileByCustomerId(String customerId);
+    List<CustomerProfile> getAllCustomers();
 
-    List<CustomerProfile> getAllCustomerProfiles();
+    CustomerProfile updateTier(Long id, String newTier);
 
-    void deleteCustomerProfile(Long id);
+    CustomerProfile updateStatus(Long id, boolean active);
 }
+

@@ -1,6 +1,6 @@
 package com.example.demo.service.serviceimpl;
 
-import com.example.demo.entity.TierUpgradeRule;
+import com.example.demo.model.TierUpgradeRule;
 import com.example.demo.repository.TierUpgradeRuleRepository;
 import com.example.demo.service.TierUpgradeRuleService;
 import org.springframework.beans.factory.annotation.Autowired;

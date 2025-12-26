@@ -1,6 +1,6 @@
 package com.example.demo.service.serviceimpl;
 
-import com.example.demo.entity.PurchaseRecord;
+import com.example.demo.model.PurchaseRecord;
 import com.example.demo.repository.PurchaseRecordRepository;
 import com.example.demo.service.PurchaseRecordService;
 import org.springframework.beans.factory.annotation.Autowired;

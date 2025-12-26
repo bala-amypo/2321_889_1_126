@@ -1,31 +1,20 @@
-package com.example.demo.service.serviceimpl;
-
-import com.example.demo.model.TierUpgradeRule;
-import com.example.demo.repository.TierUpgradeRuleRepository;
-import com.example.demo.service.TierUpgradeRuleService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
+package com.example.demo.service;
 
 import java.util.List;
+import java.util.Optional;
 
-@Service
-public class TierUpgradeRuleServiceImpl implements TierUpgradeRuleService {
+import com.example.demo.model.TierUpgradeRule;
 
-    @Autowired
-    private TierUpgradeRuleRepository tierUpgradeRuleRepository;
+public interface TierUpgradeRuleService {
 
-    @Override
-    public TierUpgradeRule createRule(TierUpgradeRule rule) {
-        return tierUpgradeRuleRepository.save(rule);
-    }
+    TierUpgradeRule createRule(TierUpgradeRule rule);
 
-    @Override
-    public List<TierUpgradeRule> getAllRules() {
-        return tierUpgradeRuleRepository.findAll();
-    }
+    TierUpgradeRule updateRule(Long id, TierUpgradeRule rule);
 
-    @Override
-    public TierUpgradeRule updateRule(TierUpgradeRule updatedRule) {
-        return tierUpgradeRuleRepository.save(updatedRule);
-    }
+    List<TierUpgradeRule> getActiveRules();
+
+    Optional<TierUpgradeRule> getRule(String fromTier, String toTier);
+
+    List<TierUpgradeRule> getAllRules();
 }
+

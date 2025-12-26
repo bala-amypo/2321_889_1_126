@@ -1,7 +1,9 @@
 package com.example.demo.service;
 
-import com.example.demo.model.PurchaseRecord;
 import java.util.List;
+import java.util.Optional;
+
+import com.example.demo.model.PurchaseRecord;
 
 public interface PurchaseRecordService {
 
@@ -11,5 +13,6 @@ public interface PurchaseRecordService {
 
     List<PurchaseRecord> getAllPurchases();
 
-    PurchaseRecord getPurchaseById(Long id);
+    Optional<PurchaseRecord> getPurchaseById(Long id);
 }
+

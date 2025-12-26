@@ -1,42 +1,14 @@
-package com.example.demo.service.serviceimpl;
-
-import com.example.demo.model.CustomerProfile;
-import com.example.demo.model.PurchaseRecord;
-import com.example.demo.model.TierHistoryRecord;
-import com.example.demo.model.TierUpgradeRule;
-import com.example.demo.repository.TierHistoryRecordRepository;
-import com.example.demo.service.TierUpgradeEngineService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
+package com.example.demo.service;
 
 import java.util.List;
 
-@Service
-public class TierUpgradeEngineServiceImpl implements TierUpgradeEngineService {
+import com.example.demo.model.TierHistoryRecord;
 
-    @Autowired
-    private TierHistoryRecordRepository historyRepository;
+public interface TierUpgradeEngineService {
 
-    @Override
-    public void upgradeCustomerTier(CustomerProfile customer, List<PurchaseRecord> purchases, List<TierUpgradeRule> rules) {
-        double totalSpend = purchases.stream().mapToDouble(PurchaseRecord::getAmount).sum();
-        int totalVisits = purchases.stream().mapToInt(PurchaseRecord::getVisits).sum();
+    TierHistoryRecord evaluateAndUpgradeTier(Long customerId);
 
-        for (TierUpgradeRule rule : rules) {
-            if (rule.getFromTier().equals(customer.getCurrentTier()) &&
-                totalSpend >= rule.getMinSpend() &&
-                totalVisits >= rule.getMinVisits()) {
+    List<TierHistoryRecord> getHistoryByCustomer(Long customerId);
 
-                String oldTier = customer.getCurrentTier();
-                customer.setCurrentTier(rule.getToTier());
-
-                TierHistoryRecord history = new TierHistoryRecord();
-                history.setCustomerId(customer.getCustomerId());
-                history.setOldTier(oldTier);
-                history.setNewTier(rule.getToTier());
-                history.setReason("Upgrade due to spend/visits");
-                historyRepository.save(history);
-            }
-        }
-    }
+    List<TierHistoryRecord> getAllHistory();
 }

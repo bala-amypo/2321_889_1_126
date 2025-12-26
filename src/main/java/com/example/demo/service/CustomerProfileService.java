@@ -1,7 +1,9 @@
 package com.example.demo.service;
 
-import com.example.demo.model.CustomerProfile;
 import java.util.List;
+import java.util.Optional;
+
+import com.example.demo.model.CustomerProfile;
 
 public interface CustomerProfileService {
 
@@ -9,7 +11,7 @@ public interface CustomerProfileService {
 
     CustomerProfile getCustomerById(Long id);
 
-    CustomerProfile findByCustomerId(String customerId);
+    Optional<CustomerProfile> findByCustomerId(String customerId);
 
     List<CustomerProfile> getAllCustomers();
 
@@ -17,4 +19,3 @@ public interface CustomerProfileService {
 
     CustomerProfile updateStatus(Long id, boolean active);
 }
-

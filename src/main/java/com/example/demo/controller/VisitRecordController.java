@@ -1,7 +1,8 @@
 package com.example.demo.controller;
 
-import com.example.demo.model.VisitRecord;
+import com.example.demo.entity.VisitRecord;
 import com.example.demo.service.VisitRecordService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -10,29 +11,16 @@ import java.util.List;
 @RequestMapping("/visits")
 public class VisitRecordController {
 
-    private final VisitRecordService service;
-
-    public VisitRecordController(VisitRecordService service) {
-        this.service = service;
-    }
+    @Autowired
+    private VisitRecordService visitRecordService;
 
     @PostMapping
-    public VisitRecord recordVisit(@RequestBody VisitRecord visit) {
-        return service.recordVisit(visit);
-    }
-
-    @GetMapping("/{id}")
-    public VisitRecord getVisitById(@PathVariable Long id) {
-        return service.getVisitById(id);
-    }
-
-    @GetMapping("/customer/{customerId}")
-    public List<VisitRecord> getByCustomer(@PathVariable Long customerId) {
-        return service.getVisitsByCustomer(customerId);
+    public VisitRecord createVisit(@RequestBody VisitRecord visit) {
+        return visitRecordService.createVisitRecord(visit);
     }
 
     @GetMapping
     public List<VisitRecord> getAllVisits() {
-        return service.getAllVisits();
+        return visitRecordService.getAllVisitRecords();
     }
 }

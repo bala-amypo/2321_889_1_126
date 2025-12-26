@@ -1,47 +1,31 @@
 package com.example.demo.controller;
 
-import com.example.demo.model.TierUpgradeRule;
+import com.example.demo.entity.TierUpgradeRule;
 import com.example.demo.service.TierUpgradeRuleService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
-@RequestMapping("/tier-rules")
+@RequestMapping("/rules")
 public class TierUpgradeRuleController {
 
-    private final TierUpgradeRuleService service;
-
-    public TierUpgradeRuleController(TierUpgradeRuleService service) {
-        this.service = service;
-    }
+    @Autowired
+    private TierUpgradeRuleService tierUpgradeRuleService;
 
     @PostMapping
     public TierUpgradeRule createRule(@RequestBody TierUpgradeRule rule) {
-        return service.createRule(rule);
-    }
-
-    @PutMapping("/{id}")
-    public TierUpgradeRule updateRule(
-            @PathVariable Long id,
-            @RequestBody TierUpgradeRule rule) {
-        return service.updateRule(id, rule);
-    }
-
-    @GetMapping("/active")
-    public List<TierUpgradeRule> getActiveRules() {
-        return service.getActiveRules();
+        return tierUpgradeRuleService.createRule(rule);
     }
 
     @GetMapping
     public List<TierUpgradeRule> getAllRules() {
-        return service.getAllRules();
+        return tierUpgradeRuleService.getAllRules();
     }
 
-    @GetMapping("/from/{fromTier}/to/{toTier}")
-    public TierUpgradeRule getRule(
-            @PathVariable String fromTier,
-            @PathVariable String toTier) {
-        return service.getRule(fromTier, toTier);
+    @PutMapping
+    public TierUpgradeRule updateRule(@RequestBody TierUpgradeRule updatedRule) {
+        return tierUpgradeRuleService.updateRule(updatedRule);
     }
 }
